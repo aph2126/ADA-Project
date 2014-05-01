@@ -3,7 +3,7 @@ prelim = function(server = 0, pct.test = .2, seed = 1, reduce_States = 0) {
 
     # Working directories
     if (server == 1) {
-        path.root = '/home/ubuntu/'
+        path.root = '/home/ubuntu/ADA-Project/'
     }
     else {
         path.root = '/Users/howland/Dropbox/ADA Project/'
