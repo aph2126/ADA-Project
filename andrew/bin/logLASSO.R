@@ -5,12 +5,12 @@
 
 # Preliminaries
 rm(list = ls())
-setwd('/home/ubuntu/andrew/bin/')
 #setwd('/Users/howland/Dropbox/ADA Project/andrew/bin')
+setwd('/home/ubuntu/ADA-Project/andrew/bin/')
 source("prelim.R")
 data = prelim(server = 1, pct.test = .3, seed = 1, reduce_States = 1)
 for (i in 1:length(names(data))) {
-    assign(names(data)[i], data[[names(data)[i]]])
+  assign(names(data)[i], data[[names(data)[i]]])
 }
 
 #ix.train = sample(nrow(ad.train), 1000)
@@ -22,15 +22,15 @@ for (i in 1:length(names(data))) {
 library(glmnet)
 X.train = model.matrix(TotalConversions ~  ., data= ad.train)
 X.test = model.matrix(TotalConversions ~  ., data= ad.test)
-fit.lasso = cv.glmnet(X.train, ad.train$TotalConversions, family = "binomial", alpha = 1,)
-yhat.train = predict(fit.lasso, newx = X.train, s = "lambda.min", type = "response")
-yhat.test = predict(fit.lasso, newx = X.test, s = "lambda.min", type = "response")
+fit.logLASSO = cv.glmnet(X.train, ad.train$TotalConversions, family = "binomial", alpha = 1,)
+yhat.logLASSO.train = predict(fit.logLASSO, newx = X.train, s = "lambda.min", type = "response")
+yhat.logLASSO.test = predict(fit.logLASSO, newx = X.test, s = "lambda.min", type = "response")
 
 
 # Saving fit 
 setwd(path.output)
-save(yhat.train, yhat.test,file = "yhat_logLASSO.Rda")
-save(fit.lasso,file = "fit_LASSO.Rda")
+save(yhat.logLASSO.train, yhat.logLASSO.test,file = "yhat_logLASSO.Rda")
+save(fit.logLASSO,file = "fit_logLASSO.Rda")
 
 
 
