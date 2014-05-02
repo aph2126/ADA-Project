@@ -41,7 +41,7 @@ ad.test[,ix.norm][!is.finite(as.matrix(ad.test[,ix.norm]))] = 0
 library(glmnet)
 X.train = model.matrix(TotalConversions ~  ., data= ad.train)
 X.test = model.matrix(TotalConversions ~  ., data= ad.test)
-fit.logLASSO = cv.glmnet(X.train, ad.train$TotalConversions, family = "binomial", alpha = 1,)
+fit.logLASSO = cv.glmnet(X.train, ad.train$TotalConversions, family = "binomial", alpha = 1s)
 yhat.logLASSO.train = predict(fit.logLASSO, newx = X.train, s = "lambda.min", type = "response")
 yhat.logLASSO.test = predict(fit.logLASSO, newx = X.test, s = "lambda.min", type = "response")
 

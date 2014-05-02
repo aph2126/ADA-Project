@@ -14,6 +14,20 @@ for (i in 1:length(names(data))) {
 }
 
 
+# Normalizing non-factor variables
+class.x = array(NA, ncol(ad.train))
+for (i in 1:ncol(ad.train)) {
+    class.x[i] = class(ad.train[,i])
+}
+ix.norm = (class.x != "factor") & (names(ad.train) != "TotalConversions")
+mean = colMeans(ad.train[,ix.norm])
+sd = apply(ad.train[,ix.norm], 2, sd)
+ad.train[,ix.norm] = t(apply(ad.train[,ix.norm], 1, function(x) (x - mean) / sd))
+ad.test[,ix.norm] = t(apply(ad.test[,ix.norm], 1, function(x) (x - mean) / sd))
+ad.train[,ix.norm][!is.finite(as.matrix(ad.train[,ix.norm]))] = 0
+ad.test[,ix.norm][!is.finite(as.matrix(ad.test[,ix.norm]))] = 0
+
+
 # Setup
 library(leaps)
 fit.null = glm(TotalConversions ~ 1, data = ad.train, family = "binomial")
