@@ -24,20 +24,23 @@ X.test = ad.test[,!ix.y]
 y.train = as.factor(ad.train[,ix.y])
 y.test = as.factor(ad.test[,ix.y])
 
-ix.train = sample(nrow(X.train), 1000)
-ix.test = sample(nrow(X.test), 1000)
-X.train = X.train[ix.train,]
-X.test = X.test[ix.test,]
-y.train = y.train[ix.train]
-y.test = y.test[ix.test]
+
+# For testing purposes
+#ix.train = sample(nrow(X.train), 1000)
+#ix.test = sample(nrow(X.test), 1000)
+#X.train = X.train[ix.train,]
+#X.test = X.test[ix.test,]
+#y.train = y.train[ix.train]
+#y.test = y.test[ix.test]
 
 
+# Estimation 
 #fit.rf <- foreach(ntree=rep(250, 9), .combine=combine,
 #              .packages='randomForest') %dopar% {
 #                randomForest(x = X.train, y = y.train, xtest = X.test, ytest = y.test,
 #                             ntree = ntree, keep.forest = TRUE)}
 fit.rForest = randomForest(x = X.train, y = y.train, xtest = X.test, ytest = y.test,
-                     ntree = 200, keep.forest = TRUE)
+                     ntree = 3000, keep.forest = TRUE)
 yhat.rForest.train = fit.rForest$votes[,2] / rowSums(fit.rForest$votes)
 yhat.rForest.test = fit.rForest$test$votes[,2] / rowSums(fit.rForest$test$votes)
 
