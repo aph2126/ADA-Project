@@ -14,31 +14,25 @@ y.train = ad.train$TotalConversions
 library(ROCR)
 
 
+# Loading predicted values
+filenames = list.files(path.output, "yhat", full.names = TRUE)
+predictions = list()
+for (i in 1:length(filenames)) {
+    n1 = gsub(".*\\yhat_(.*)\\.Rda", "\\1", filenames[1])
+    n2 = paste("pred.", n1, sep = "")
+    assign(n2, predi
+}
+
+filenames = dir(dirname,full.names=TRUE)
 # Loading sSTEP results
 setwd(path.output)
 load("yhat_sSTEP.Rda")
-pred.sSTEP = prediction(yhat.sSTEP.test, y.test)
-pred.sSTEP = prediction(yhat.sSTEP.train, y.train)
-auc.sSTEP = performance(pred.sSTEP, 'auc')
-roc.sSTEP = performance(pred.sSTEP, "tpr", "fpr" )
-
-
-# Loading sFWD results
-load("yhat_sFWD.Rda")
-pred.sFWD = prediction(yhat.sFWD.test, y.test)
-auc.sFWD = performance(pred.sFWD, 'auc')
-roc.sFWD = performance(pred.sFWD, "tpr", "fpr" )
-
-
-# Loading LASSO results
-setwd(path.output)
-load("yhat_logLASSO.Rda")
-yhat.lasso.test = yhat.test
-yhat.lasso.train = yhat.train
-rm(yhat.test, yhat.train)
-pred.lasso = prediction(yhat.lasso.test, y.test)
-auc.lasso = performance(pred.lasso, 'auc')
-roc.lasso = performance(pred.lasso, "tpr", "fpr" )
+pred.svm.train = prediction(yhat.svm.train, y.train)
+pred.svm.test = prediction(yhat.svm.test, y.test)
+auc.svm.train = performance(pred.svm.train, 'auc')
+auc.svm.test = performance(pred.svm.test, 'auc')
+roc.svm.train = performance(pred.svm.train, "tpr", "fpr" )
+roc.svm.test = performance(pred.svm.test, "tpr", "fpr" )
 
 
 # ROC Curve
