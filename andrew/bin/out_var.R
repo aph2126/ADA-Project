@@ -6,7 +6,7 @@
 # Preliminaries
 rm(list = ls())
 setwd('/Users/howland/Dropbox/ADA Project/andrew/bin')
-
+source("var_names.R")
 
 # Function for assigning stars for significance
 stars = function(estimates, name = "beta") {
@@ -63,6 +63,7 @@ out = out[,-1]
 
 # Outputting table
 library(xtable)
+rownames(out) = var_names(rownames(out))
 n = 10
 ix.top = c(order(abs(out$beta.logLASSO[-1]), decreasing = TRUE)[1:n], 1)
-out[ix.top,]
+xtable(out[ix.top + 1,])

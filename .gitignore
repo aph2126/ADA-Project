@@ -1,3 +1,4 @@
+*.Rhistory
 /data/
 *.Rda
 /mark/

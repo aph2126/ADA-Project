@@ -24,7 +24,9 @@ for (i in 1:length(filenames)) {
 }
 
 filenames = dir(dirname,full.names=TRUE)
-# Loading sSTEP results
+
+
+# Loading SVM results
 setwd(path.output)
 load("yhat_sSTEP.Rda")
 pred.svm.train = prediction(yhat.svm.train, y.train)
@@ -34,14 +36,20 @@ auc.svm.test = performance(pred.svm.test, 'auc')
 roc.svm.train = performance(pred.svm.train, "tpr", "fpr" )
 roc.svm.test = performance(pred.svm.test, "tpr", "fpr" )
 
+# Loading Random Forest results
+setwd(path.output)
+load("yhat_rForest.Rda")
+pred.rForest.train = prediction(yhat.rForest.train, y.train)
+pred.rForest.test = prediction(yhat.rForest.test, y.test)
+auc.rForest.train = performance(pred.rForest.train, 'auc')
+auc.rForest.test = performance(pred.rForest.test, 'auc')
+roc.rForest.train = performance(pred.rForest.train, "tpr", "fpr" )
+roc.rForest.test = performance(pred.rForest.test, "tpr", "fpr" )
+
 
 # ROC Curve
-y = unlist(roc.sSTEP@y.values)
-x = unlist(roc.sSTEP@x.values)
-y1 = unlist(roc.lasso@y.values)
-x1 = unlist(roc.lasso@x.values)
-y2 = unlist(roc.sFWD@y.values)
-x2 = unlist(roc.sFWD@x.values)
+y = unlist(roc.rForest.test@y.values)
+x = unlist(roc.rForest.test@x.values)
 par(mar = c(3,3,0,0) + .1)
 plot(x, y, type = "l", axes = F, xlab = "", ylab = "", lwd = .5)
 lines(x1, y1, type = "l", col = 2, lwd = .5)
