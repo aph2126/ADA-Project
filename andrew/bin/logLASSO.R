@@ -5,18 +5,37 @@
 
 # Preliminaries
 rm(list = ls())
-#setwd('/Users/howland/Dropbox/ADA Project/andrew/bin')
-setwd('/home/ubuntu/ADA-Project/andrew/bin/')
+setwd('/Users/howland/Dropbox/ADA Project/andrew/bin')
+#setwd('/home/ubuntu/ADA-Project/andrew/bin/')
 source("prelim.R")
-data = prelim(server = 1, pct.test = .3, seed = 1, reduce_States = 1)
+data = prelim(server = 0, pct.test = .3, seed = 1, reduce_States = 1)
 for (i in 1:length(names(data))) {
   assign(names(data)[i], data[[names(data)[i]]])
 }
 
-#ix.train = sample(nrow(ad.train), 1000)
-#ix.test = sample(nrow(ad.test), 300)
-#ad.train = ad.train[ix.train,]
-#ad.test = ad.test[ix.test,]
+# For testing purposes
+test = 0
+if (test == 1) {
+    ix.train = sample(nrow(ad.train), 1000)
+    ix.test = sample(nrow(ad.test), 300)
+    ad.train = ad.train[ix.train,]
+    ad.test = ad.test[ix.test,]
+}
+
+
+# Normalizing non-factor variables
+class.x = array(NA, ncol(ad.train))
+for (i in 1:ncol(ad.train)) {
+    class.x[i] = class(ad.train[,i])
+}
+ix.norm = (class.x != "factor") & (names(ad.train) != "TotalConversions")
+mean = colMeans(ad.train[,ix.norm])
+sd = apply(ad.train[,ix.norm], 2, sd)
+ad.train[,ix.norm] = t(apply(ad.train[,ix.norm], 1, function(x) (x - mean) / sd))
+ad.test[,ix.norm] = t(apply(ad.test[,ix.norm], 1, function(x) (x - mean) / sd))
+ad.train[,ix.norm][!is.finite(as.matrix(ad.train[,ix.norm]))] = 0
+ad.test[,ix.norm][!is.finite(as.matrix(ad.test[,ix.norm]))] = 0
+
 
 # L1 Regularized logistic regression
 library(glmnet)
