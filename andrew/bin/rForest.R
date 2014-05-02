@@ -40,7 +40,7 @@ y.test = as.factor(ad.test[,ix.y])
 #                randomForest(x = X.train, y = y.train, xtest = X.test, ytest = y.test,
 #                             ntree = ntree, keep.forest = TRUE)}
 fit.rForest = randomForest(x = X.train, y = y.train, xtest = X.test, ytest = y.test,
-                     ntree = 3000, keep.forest = TRUE)
+                     ntree = 3000)
 yhat.rForest.train = fit.rForest$votes[,2] / rowSums(fit.rForest$votes)
 yhat.rForest.test = fit.rForest$test$votes[,2] / rowSums(fit.rForest$test$votes)
 
