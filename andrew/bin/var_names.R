@@ -5,6 +5,7 @@ var_names = function(varnames) {
     load("ad_wide.Rda")
     varnames.new = array("", length(varnames))
     
+    
     # Looping through variable names
     for (i in 1:length(varnames)) {
         
@@ -76,6 +77,14 @@ var_names = function(varnames) {
     }
     ix.cont = (varnames.new == "")
     varnames.new[ix.cont] = varnames[ix.cont]
+    
+    # Random changes
+    varnames.new[varnames.new == "1(Mobile midrange: feature phone)"] = "1(Feature Phone)"
+    varnames.new[varnames.new == "1(Mobile highend: smartphone)"] = "1(Highend Smartphone)"
+    varnames.new[varnames.new == "1(Other/Unknown)"] = "1(Unknown OS)"
+    varnames.new[varnames.new == "#(DART Search : Google)"] = "#(Google, DART)"
+    
+    
     return(varnames.new)
     
 }
