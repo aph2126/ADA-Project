@@ -29,11 +29,14 @@ colnames(yhat.train) = colnames(yhat.test) = c("Step", "LASSO", "Random Forest",
 
 # Performance statistics
 fp.tp.train = fp.tp.test = list()
+auc.train = auc.test = array(NA, ncol(yhat.train))
 for (i in 1:ncol(yhat.train)) {
     pred.train.i = prediction(yhat.train[,i], y.train)
     pred.test.i = prediction(yhat.test[,i], y.test)
     perf.train.i = performance(pred.train.i,"tpr","fpr")
     perf.test.i = performance(pred.test.i,"tpr","fpr")
+    auc.train[i] = unlist(performance(pred.train.i,"auc")@y.values)
+    auc.test[i] = unlist(performance(pred.test.i,"auc")@y.values)
     fp.tp.train[[i]] = cbind(unlist(perf.train.i@x.values), unlist(perf.train.i@y.values))
     fp.tp.test[[i]] = cbind(unlist(perf.test.i@x.values), unlist(perf.test.i@y.values))
 }
@@ -53,12 +56,14 @@ plot(x = fp.tp.train[[1]][,1], y = fp.tp.train[[1]][,2], type = "l", axes = F, y
 axis(side = 1, tck = -.015, labels = NA)
 axis(side = 2, tck = -.015, labels = seq(0,1,by=.25), at = seq(0,1,by=.25), las = 2, cex = n.cex)
 mtext(side = 2, "TP (Train)", line = 3, cex = n.cex)
+text(.75,.25, paste("AUC: ", round(auc.train[1],2), sep = ""), cex = n.cex)
 
 par(mar = c(.5,0,0,0)+.1)
 for (i in 2:ncol(yhat.train)) {
     plot(x = fp.tp.train[[i]][,1], y = fp.tp.train[[i]][,2], type = "l", axes = F, ylab = "", xlab = "", col = i)
     axis(side = 1, tck = -.015, labels = NA)
     axis(side = 2, tck = -.015, labels = NA)
+    text(.75,.25, paste("AUC: ", round(auc.train[i],2), sep = ""), cex = n.cex)
 }
 
 par(mar = c(3,4,0,0)+.1)
@@ -67,6 +72,7 @@ axis(side = 1, tck = -.015, labels = seq(0,1,by=.25), at = seq(0,1,by=.25), las 
 axis(side = 2, tck = -.015, labels = seq(0,1,by=.25), at = seq(0,1,by=.25), las = 2, cex = n.cex)
 mtext(side = 2, "TP (Test)", line = 3, cex = n.cex)
 mtext(side = 1, "FP", line = 2, cex = n.cex)
+text(.75,.25, paste("AUC: ", round(auc.test[1],2), sep = ""), cex = n.cex)
 
 par(mar = c(3,0,0,0)+.1)
 for (i in 2:ncol(yhat.train)) {
@@ -74,6 +80,7 @@ for (i in 2:ncol(yhat.train)) {
     axis(side = 1, tck = -.015, labels = seq(0,1,by=.25), at = seq(0,1,by=.25), las = 1, cex = n.cex)
     axis(side = 2, tck = -.015, labels = NA)
     mtext(side = 1, "FP", line = 2, cex = n.cex)
+    text(.75,.25, paste("AUC: ", round(auc.test[i],2), sep = ""), cex = n.cex)
 }
 
 par(mar = c(0,0,0,0))
